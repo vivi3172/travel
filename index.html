@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="荷蘭匈牙利">
+<title>荷蘭 × 匈牙利 行程</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1E4D7B">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F1E8;
+    --paper-2:#EFE9DB;
+    --card:#FFFFFF;
+    --ink:#1C2535;
+    --ink-soft:#5A6478;
+    --line:#E3DCCC;
+    --nl:#1E4D7B;        /* 台夫特藍 — 荷蘭 */
+    --nl-soft:#E8F0F7;
+    --hu:#B43B2E;        /* 紅椒紅 — 匈牙利 */
+    --hu-soft:#F8E9E6;
+    --gold:#B07D2B;      /* 金 — 航班/小費 */
+    --gold-soft:#F4ECDB;
+    --shadow:0 1px 2px rgba(28,37,53,.05),0 8px 24px rgba(30,77,123,.07);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Noto Sans TC",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:var(--paper-2);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{
+    max-width:480px;margin:0 auto;min-height:100vh;
+    background:var(--paper);
+    position:relative;
+    box-shadow:0 0 60px rgba(28,37,53,.08);
+  }
+  /* ---- top bar ---- */
+  .topbar{
+    position:sticky;top:0;z-index:30;
+    background:rgba(245,241,232,.86);
+    backdrop-filter:saturate(180%) blur(14px);
+    -webkit-backdrop-filter:saturate(180%) blur(14px);
+    padding:calc(env(safe-area-inset-top) + 14px) 20px 12px;
+    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  .brand{display:flex;flex-direction:column;line-height:1.15}
+  .brand .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);font-weight:500}
+  .brand h1{font-family:"Fraunces",serif;font-weight:600;font-size:21px;margin:1px 0 0;letter-spacing:.01em}
+  .maps-toggle{
+    border:1px solid var(--line);background:var(--card);
+    border-radius:999px;padding:7px 12px;font-size:12px;font-weight:500;color:var(--ink-soft);
+    display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap;
+  }
+  .maps-toggle b{color:var(--ink)}
+  /* ---- scroll area ---- */
+  .screen{padding:18px 18px 110px;display:none;animation:fade .35s ease}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .section-label{
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);
+    font-weight:600;margin:26px 4px 10px;display:flex;align-items:center;gap:8px;
+  }
+  .section-label:first-child{margin-top:4px}
+  .section-label .ln{flex:1;height:1px;background:var(--line)}
+  /* ---- chips ---- */
+  .chip{
+    display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;
+    padding:3px 10px;border-radius:999px;letter-spacing:.02em;
+  }
+  .chip.nl{background:var(--nl-soft);color:var(--nl)}
+  .chip.hu{background:var(--hu-soft);color:var(--hu)}
+  .chip.gold{background:var(--gold-soft);color:var(--gold)}
+  /* ---- cards ---- */
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .card + .card{margin-top:12px}
+  /* ---- day card ---- */
+  .day{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;border-left:4px solid var(--line)}
+  .day.nl{border-left-color:var(--nl)}
+  .day.hu{border-left-color:var(--hu)}
+  .day-head{display:flex;align-items:center;gap:13px;padding:15px 16px;cursor:pointer}
+  .day-num{
+    flex-shrink:0;width:46px;height:46px;border-radius:13px;background:var(--paper-2);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;
+  }
+  .day-num .d{font-family:"Fraunces",serif;font-weight:700;font-size:18px;color:var(--ink)}
+  .day-num .m{font-size:10px;color:var(--ink-soft);margin-top:2px;font-weight:500}
+  .day-meta{flex:1;min-width:0}
+  .day-meta .wd{font-size:12px;color:var(--ink-soft);font-weight:500}
+  .day-meta .th{font-family:"Fraunces",serif;font-size:16px;font-weight:600;margin-top:1px;line-height:1.3}
+  .caret{flex-shrink:0;color:var(--ink-soft);transition:transform .3s ease;font-size:13px}
+  .day.open .caret{transform:rotate(90deg)}
+  .day-body{display:none;padding:0 16px 8px}
+  .day.open .day-body{display:block}
+  .block{padding:11px 0;border-top:1px dashed var(--line)}
+  .block-label{font-size:11px;font-weight:700;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:6px}
+  .item{display:flex;align-items:flex-start;gap:9px;padding:3px 0;font-size:14px}
+  .item .dot{flex-shrink:0;width:5px;height:5px;border-radius:50%;background:var(--ink-soft);margin-top:9px;opacity:.5}
+  .item .tx{flex:1}
+  .item .tx .time{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+  .nav-btn{
+    margin-top:6px;display:inline-flex;align-items:center;gap:5px;
+    background:var(--nl);color:#fff;border:none;border-radius:9px;
+    padding:6px 11px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;
+  }
+  .nav-btn.hu{background:var(--hu)}
+  .nav-btn svg{width:13px;height:13px}
+  .note{font-size:12px;color:var(--ink-soft);margin-top:3px}
+  /* ---- today hero ---- */
+  .hero{
+    background:linear-gradient(150deg,var(--nl) 0%,#16395c 100%);
+    color:#fff;border-radius:22px;padding:22px;position:relative;overflow:hidden;
+    box-shadow:0 12px 30px rgba(30,77,123,.28);
+  }
+  .hero.hu{background:linear-gradient(150deg,var(--hu) 0%,#8c2c22 100%);box-shadow:0 12px 30px rgba(180,59,46,.28)}
+  .hero.pre{background:linear-gradient(150deg,#3a4a63 0%,#26303f 100%);box-shadow:0 12px 30px rgba(28,37,53,.22)}
+  .hero .tile{position:absolute;right:-20px;top:-20px;width:130px;height:130px;opacity:.13}
+  .hero .hlabel{font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.78;font-weight:500}
+  .hero .hdate{font-family:"Fraunces",serif;font-size:30px;font-weight:600;margin:5px 0 2px}
+  .hero .htheme{font-size:15px;opacity:.92;font-weight:500}
+  .hero .hcount{font-family:"Fraunces",serif;font-size:46px;font-weight:700;margin:6px 0 0;line-height:1}
+  .hero-blocks{margin-top:16px;background:rgba(255,255,255,.12);border-radius:14px;padding:4px 14px}
+  .hero-blocks .hb{padding:9px 0;border-top:1px solid rgba(255,255,255,.16);font-size:13.5px}
+  .hero-blocks .hb:first-child{border-top:none}
+  .hero-blocks .hb b{font-variant-numeric:tabular-nums}
+  .hero-nav{margin-top:14px}
+  .hero-nav .nav-btn{background:#fff;color:var(--ink);font-size:13px;padding:9px 14px}
+  /* ---- place row ---- */
+  .place{display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid var(--line)}
+  .place:first-child{border-top:none}
+  .place .pinfo{flex:1;min-width:0}
+  .place .pname{font-weight:600;font-size:14.5px}
+  .place .pnote{font-size:12px;color:var(--ink-soft);margin-top:1px}
+  .place .picon{flex-shrink:0}
+  .icon-btn{
+    width:38px;height:38px;border-radius:11px;border:none;cursor:pointer;
+    background:var(--nl-soft);color:var(--nl);display:flex;align-items:center;justify-content:center;
+  }
+  .icon-btn.hu{background:var(--hu-soft);color:var(--hu)}
+  .icon-btn svg{width:18px;height:18px}
+  .cat-title{font-family:"Fraunces",serif;font-size:15px;font-weight:600;padding:14px 16px 4px;display:flex;align-items:center;gap:8px}
+  .text-list{padding:6px 16px 14px}
+  .text-list .tl{font-size:13px;color:var(--ink-soft);padding:3px 0;display:flex;gap:7px}
+  .text-list .tl::before{content:"·";color:var(--ink-soft)}
+  /* ---- converter ---- */
+  .conv{padding:18px 16px}
+  .conv h3{font-family:"Fraunces",serif;font-size:17px;margin:0 0 14px;display:flex;align-items:center;gap:9px}
+  .conv-row{display:flex;gap:10px;align-items:stretch}
+  .conv-field{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:10px 12px}
+  .conv-field label{font-size:11px;color:var(--ink-soft);font-weight:600;letter-spacing:.04em}
+  .conv-field input{
+    width:100%;border:none;background:transparent;font-size:22px;font-weight:700;color:var(--ink);
+    font-family:"Fraunces",serif;outline:none;margin-top:2px;font-variant-numeric:tabular-nums;
+  }
+  .conv-eq{display:flex;align-items:center;color:var(--ink-soft);font-weight:700;font-size:18px}
+  .rate-line{display:flex;align-items:center;gap:6px;margin-top:11px;font-size:12px;color:var(--ink-soft)}
+  .rate-line input{
+    width:64px;border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:12px;
+    font-family:inherit;text-align:right;color:var(--ink);font-variant-numeric:tabular-nums;
+  }
+  /* ---- table ---- */
+  .ttable{width:100%;border-collapse:collapse;font-size:13px}
+  .ttable th,.ttable td{padding:9px 8px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  .ttable th{font-size:11px;letter-spacing:.04em;color:var(--ink-soft);font-weight:700;text-transform:uppercase}
+  .ttable td:first-child{font-weight:600;width:34%}
+  .ttable .nlh{color:var(--nl)}
+  .ttable .huh{color:var(--hu)}
+  /* ---- phrases ---- */
+  .phrase{padding:11px 16px;border-top:1px solid var(--line);display:flex;align-items:center;gap:12px}
+  .phrase:first-child{border-top:none}
+  .phrase .ph-zh{font-size:12px;color:var(--ink-soft);width:78px;flex-shrink:0}
+  .phrase .ph-main{flex:1}
+  .phrase .ph-fl{font-weight:600;font-size:15px}
+  .phrase .ph-pr{font-size:11px;color:var(--ink-soft);margin-top:1px}
+  .phrase .say{width:34px;height:34px;border-radius:10px;border:none;background:var(--paper-2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--ink-soft)}
+  .phrase .say svg{width:16px;height:16px}
+  /* ---- info rows ---- */
+  .info-row{display:flex;gap:13px;padding:14px 16px;border-top:1px solid var(--line)}
+  .info-row:first-child{border-top:none}
+  .info-row .ic{flex-shrink:0;width:40px;height:40px;border-radius:11px;background:var(--gold-soft);color:var(--gold);display:flex;align-items:center;justify-content:center}
+  .info-row .ic svg{width:19px;height:19px}
+  .info-row .id{flex:1;min-width:0}
+  .info-row .id .t{font-weight:600;font-size:14.5px}
+  .info-row .id .s{font-size:12.5px;color:var(--ink-soft);margin-top:2px;line-height:1.5}
+  .info-row .id .s .big{font-family:"Fraunces",serif;color:var(--ink);font-weight:600}
+  .flight-leg{display:flex;align-items:center;gap:10px;font-size:13px;padding:3px 0;font-variant-numeric:tabular-nums}
+  .flight-leg .fl-no{background:var(--gold-soft);color:var(--gold);font-weight:700;font-size:11px;padding:2px 7px;border-radius:6px;flex-shrink:0;width:62px;text-align:center}
+  .flight-leg .fl-rt{flex:1}
+  .flight-leg .fl-rt b{color:var(--ink)}
+  .emergency{background:var(--hu-soft);border-radius:var(--radius);padding:15px 16px;margin-top:12px}
+  .emergency .et{font-weight:700;color:var(--hu);font-size:13px;display:flex;align-items:center;gap:7px;margin-bottom:6px}
+  .emergency .er{font-size:13px;padding:4px 0;display:flex;justify-content:space-between;gap:10px}
+  .emergency .er b{font-family:"Fraunces",serif;color:var(--hu);font-weight:700}
+  .emergency a{color:var(--hu);text-decoration:none;font-weight:700}
+  /* ---- bottom nav ---- */
+  .tabbar{
+    position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:40;
+    background:rgba(245,241,232,.92);backdrop-filter:saturate(180%) blur(16px);
+    -webkit-backdrop-filter:saturate(180%) blur(16px);
+    border-top:1px solid var(--line);
+    display:flex;padding:8px 6px calc(env(safe-area-inset-bottom) + 8px);
+  }
+  .tab{
+    flex:1;background:none;border:none;cursor:pointer;font-family:inherit;
+    display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink-soft);padding:4px 0;
+  }
+  .tab svg{width:22px;height:22px}
+  .tab span{font-size:10px;font-weight:600;letter-spacing:.02em}
+  .tab.active{color:var(--nl)}
+  .intro{font-size:12.5px;color:var(--ink-soft);padding:0 4px 4px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <span class="eyebrow">2026 · 06.27 – 07.08</span>
+      <h1>荷蘭 × 匈牙利</h1>
+    </div>
+    <button class="maps-toggle" id="mapsToggle" onclick="toggleMaps()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M9 20l-5.5 2V6L9 4m0 16l6-2m-6 2V4m6 14l5.5 2V4l-5.5-2m0 16V2M9 4l6-2"/></svg>
+      <span>地圖：<b id="mapsName">Google</b></span>
+    </button>
+  </div>
+
+  <!-- ============ TODAY ============ -->
+  <div class="screen active" id="screen-today">
+    <div id="todayHost"></div>
+  </div>
+
+  <!-- ============ ITINERARY ============ -->
+  <div class="screen" id="screen-days">
+    <p class="intro">點任一天展開細節。每個有店名／景點的項目都附導航鈕。</p>
+    <div id="daysHost"></div>
+  </div>
+
+  <!-- ============ PLACES ============ -->
+  <div class="screen" id="screen-places">
+    <p class="intro">依城市與類別整理。點 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="vertical-align:-2px"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> 直接導航。沒有固定店名的建議列在下方文字清單。</p>
+    <div id="placesHost"></div>
+  </div>
+
+  <!-- ============ MONEY ============ -->
+  <div class="screen" id="screen-money">
+    <div class="section-label">換匯 <span class="ln"></span></div>
+    <div class="card conv">
+      <h3><span class="chip nl">荷蘭 €</span> 歐元 ⇄ 台幣</h3>
+      <div class="conv-row">
+        <div class="conv-field"><label>EUR €</label><input type="number" inputmode="decimal" id="eurIn" value="10" oninput="convEUR('eur')"></div>
+        <div class="conv-eq">≈</div>
+        <div class="conv-field"><label>TWD NT$</label><input type="number" inputmode="decimal" id="eurTwd" oninput="convEUR('twd')"></div>
+      </div>
+      <div class="rate-line">1 € = <input type="number" inputmode="decimal" id="rateEUR" value="36" oninput="convEUR('eur')"> NT$ ·參考匯率，可手動改</div>
+    </div>
+    <div class="card conv">
+      <h3><span class="chip hu">匈牙利 Ft</span> 福林 ⇄ 台幣</h3>
+      <div class="conv-row">
+        <div class="conv-field"><label>HUF Ft</label><input type="number" inputmode="decimal" id="hufIn" value="1000" oninput="convHUF('huf')"></div>
+        <div class="conv-eq">≈</div>
+        <div class="conv-field"><label>TWD NT$</label><input type="number" inputmode="decimal" id="hufTwd" oninput="convHUF('twd')"></div>
+      </div>
+      <div class="rate-line">1 Ft = <input type="number" inputmode="decimal" id="rateHUF" value="0.1" step="0.001" oninput="convHUF('huf')"> NT$ ·約 100 Ft ≈ 10 NT$</div>
+    </div>
+
+    <div class="section-label">小費參考 <span class="ln"></span></div>
+    <div class="card" style="padding:6px 14px 12px">
+      <table class="ttable">
+        <thead><tr><th>項目</th><th class="nlh">荷蘭</th><th class="huh">匈牙利</th></tr></thead>
+        <tbody>
+          <tr><td>導遊</td><td>€20–50 / 日</td><td>50–60 / 日</td></tr>
+          <tr><td>司機</td><td>€25–50 / 日</td><td>30–40 / 日</td></tr>
+          <tr><td>機場接送</td><td>€5–10 / 人</td><td>10–20</td></tr>
+          <tr><td>飯店行李員</td><td>€5–10</td><td>1–2 / 件</td></tr>
+          <tr><td>客房清潔</td><td>非必要，但 nice</td><td>非必要，但 nice</td></tr>
+          <tr><td>計程車</td><td>5–10%</td><td>5–10%</td></tr>
+          <tr><td>餐廳</td><td>5% / 10% / 20%</td><td>10%</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="padding:4px 2px 0">匈牙利金額多以福林或歐元給付，數字為參考區間。</p>
+    </div>
+  </div>
+
+  <!-- ============ INFO ============ -->
+  <div class="screen" id="screen-info">
+    <div class="section-label">航班 <span class="ln"></span></div>
+    <div class="card">
+      <div class="info-row">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2 16 11l3.5-3.5a2 2 0 0 0-2.8-2.8L13 8.2 4.8 6.4a1 1 0 0 0-.9 1.7l5.6 4-1.8 3.6-2.7-.8a1 1 0 0 0-1 1.6l2.4 2.4 2.4 2.4a1 1 0 0 0 1.6-1l-.8-2.7 3.6-1.8 4 5.6a1 1 0 0 0 1.7-.9z"/></svg></div>
+        <div class="id">
+          <div class="t">去程 · 台北 → 阿姆斯特丹</div>
+          <div class="flight-leg" style="margin-top:5px"><span class="fl-no">EK367</span><span class="fl-rt"><b>6/26 23:50</b> TPE → <b>6/27 04:35</b> DXB</span></div>
+          <div class="flight-leg"><span class="fl-no">EK147</span><span class="fl-rt"><b>6/27 07:50</b> DXB → <b>6/27 13:15</b> AMS</span></div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2 16 11l3.5-3.5a2 2 0 0 0-2.8-2.8L13 8.2 4.8 6.4a1 1 0 0 0-.9 1.7l5.6 4-1.8 3.6-2.7-.8a1 1 0 0 0-1 1.6l2.4 2.4 2.4 2.4a1 1 0 0 0 1.6-1l-.8-2.7 3.6-1.8 4 5.6a1 1 0 0 0 1.7-.9z"/></svg></div>
+        <div class="id">
+          <div class="t">轉場 · 阿姆斯特丹 → 布達佩斯</div>
+          <div class="flight-leg" style="margin-top:5px"><span class="fl-no">KL1367</span><span class="fl-rt"><b>7/04 14:35</b> AMS → <b>7/04 16:30</b> BUD</span></div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2 16 11l3.5-3.5a2 2 0 0 0-2.8-2.8L13 8.2 4.8 6.4a1 1 0 0 0-.9 1.7l5.6 4-1.8 3.6-2.7-.8a1 1 0 0 0-1 1.6l2.4 2.4 2.4 2.4a1 1 0 0 0 1.6-1l-.8-2.7 3.6-1.8 4 5.6a1 1 0 0 0 1.7-.9z"/></svg></div>
+        <div class="id">
+          <div class="t">回程 · 布達佩斯 → 台北</div>
+          <div class="flight-leg" style="margin-top:5px"><span class="fl-no">EK112</span><span class="fl-rt"><b>7/08 16:05</b> BUD → <b>7/09 00:05</b> DXB</span></div>
+          <div class="flight-leg"><span class="fl-no">EK266</span><span class="fl-rt"><b>7/09 03:45</b> DXB → <b>7/09 16:15</b> TPE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">飯店 <span class="ln"></span></div>
+    <div class="card" id="hotelsHost"></div>
+
+    <div class="section-label">荷蘭文 <span class="ln"></span></div>
+    <div class="card" id="dutchHost"></div>
+
+    <div class="section-label">匈牙利文 <span class="ln"></span></div>
+    <div class="card" id="hunHost"></div>
+
+    <div class="emergency">
+      <div class="et"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>緊急聯絡</div>
+      <div class="er"><span>歐洲共用緊急電話（荷／匈）</span><a href="tel:112">112</a></div>
+      <div class="er"><span>旅外國人急難救助專線（外交部）</span><a href="tel:+886800085095">800-0885-0885</a></div>
+      <p class="note" style="margin-top:6px;color:var(--hu)">出國旅外急難救助：從當地撥「國際冠碼＋800-0885-0885」免付費；部分國家撥法不同，可改撥 +886-800-085-095。</p>
+    </div>
+  </div>
+
+  <!-- ============ TAB BAR ============ -->
+  <nav class="tabbar">
+    <button class="tab active" data-s="today" onclick="go('today')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 9v12a1 1 0 0 0 1 1h6v-7h6v7h6a1 1 0 0 0 1-1V9z"/></svg><span>今日</span></button>
+    <button class="tab" data-s="days" onclick="go('days')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>行程</span></button>
+    <button class="tab" data-s="places" onclick="go('places')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>地點</span></button>
+    <button class="tab" data-s="money" onclick="go('money')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 9a2.5 2.5 0 0 0-2.5-1.5c-1.4 0-2.5.9-2.5 2s1.1 1.8 2.5 2 2.5.9 2.5 2-1.1 2-2.5 2A2.5 2.5 0 0 1 9.5 15M12 6v1.5M12 16.5V18"/></svg><span>換匯</span></button>
+    <button class="tab" data-s="info" onclick="go('info')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg><span>資訊</span></button>
+  </nav>
+</div>
+
+<script>
+/* ============ DATA ============ */
+const NAVSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+
+const HOTELS = [
+  {country:'nl', name:'Hotel Okura Amsterdam', city:'Amsterdam', range:'6/27 – 7/1', q:'Hotel Okura Amsterdam'},
+  {country:'nl', name:'Urban Residences Maastricht', city:'Maastricht', range:'7/1 – 7/4', q:'Urban Residences Maastricht'},
+  {country:'hu', name:'Al Habtoor Palace Budapest', city:'Budapest', range:'7/4 – 7/8', q:'Al Habtoor Palace Budapest'},
+];
+
+// place helper
+const P = (name, q, note) => ({name, q, note});
+
+const DAYS = [
+  {n:1, date:'06/27', mo:'六月', wd:'星期六', c:'nl', theme:'抵達 · 採買 · 散步',
+   blocks:[
+     {l:'早上', items:[{t:'一婷 10:15 抵達'}]},
+     {l:'下午', items:[
+        {t:'阿姨們 13:15 抵達阿姆斯特丹'},
+        {t:'禮賓快速通道，約 14:15 到飯店休息'},
+        {t:'15:00 出發：當地市集 → 亞洲超市 → 荷蘭菜，三地相距約 600m'},
+     ]},
+     {l:'晚餐', items:[{t:"荷蘭菜 't Heemelrijck", p:P("'t Heemelrijck", "'t Heemelrijck, Amsterdam")}]},
+   ]},
+  {n:2, date:'06/28', mo:'六月', wd:'星期日', c:'nl', theme:'梵谷美術館',
+   blocks:[
+     {l:'早上', items:[{t:'10:00 荷蘭焦糖煎餅工作坊（盈汎／一婷／Leni），10:50 結束'}]},
+     {l:'中餐', items:[{t:'12:30 Hoi Tin 港式酒樓（一婷已訂位，約 12:00 出發）', p:P('Hoi Tin','Hoi Tin restaurant, Amsterdam')}]},
+     {l:'下午', items:[{t:'梵谷美術館（導遊 3h，車程約 20 分）', p:P('梵谷美術館 Van Gogh Museum','Van Gogh Museum, Amsterdam')}]},
+     {l:'晚餐', items:[{t:'到時候決定'}]},
+   ]},
+  {n:3, date:'06/29', mo:'六月', wd:'星期一', c:'nl', theme:'周邊城市一日遊 · 風車與鬱金香',
+   blocks:[
+     {l:'早上', items:[
+        {t:'10:00 飯店大廳集合，驅車出發（導遊 7h）'},
+        {t:'蒙尼肯丹 Monnickendam — 13 世紀運河小鎮 + 傳統木鞋工廠', p:P('Monnickendam','Monnickendam, Netherlands')},
+        {t:'謝默霍恩 Schermerhorn — 貝姆斯特圩田（世界遺產）+ 歷史風車', p:P('Schermerhorn','Schermerhorn, Netherlands')},
+        {t:'鬱金香溫室工廠 — 球莖到綻放，可採摘（10–5 月季節限定，需先確認）'},
+     ]},
+     {l:'中餐', items:[{t:'當地找'}]},
+     {l:'下午', items:[{t:'約 17:00 回到阿姆斯特丹'}]},
+     {l:'晚餐', items:[{t:'19:30 Amber Garden 高級中餐（一婷已訂位，約 19:00 出發）', p:P('Amber Garden','Amber Garden restaurant, Amsterdam')}]},
+   ]},
+  {n:4, date:'06/30', mo:'六月', wd:'星期二', c:'nl', theme:'國家美術館 · 遊河 · 逛街',
+   blocks:[
+     {l:'早上', items:[{t:'10:30 飯店大廳集合 → 國家美術館（導遊 3h）', p:P('國家美術館 Rijksmuseum','Rijksmuseum, Amsterdam')}]},
+     {l:'中餐', items:[{t:'13:00 Restaurant Rijks（館內米其林 fine dining，旅行社已訂位）', p:P('Restaurant Rijks','Restaurant Rijks, Amsterdam')}]},
+     {l:'下午', items:[
+        {t:'14:30 De Negen Straatjes 特色街區散步＋購物（Utrechtsestraat／De Negen Straatjes／De Pijp，導遊 4h）', p:P('De Negen Straatjes','De Negen Straatjes, Amsterdam')},
+        {t:'18:30 包船遊河（導遊 1.5h）'},
+     ]},
+     {l:'晚餐', items:[{t:'到時決定'}]},
+   ]},
+  {n:5, date:'07/01', mo:'七月', wd:'星期三', c:'nl', theme:'科學博物館 → 前往馬斯垂克',
+   blocks:[
+     {l:'早上', items:[{t:'10:00 自行前往 NEMO 科學博物館（盈汎／一婷／Leni）', p:P('NEMO 科學博物館','NEMO Science Museum, Amsterdam')}]},
+     {l:'中餐', items:[{t:'建議飯店日式便當'}]},
+     {l:'下午', items:[{t:'14:00 飯店集合 → 馬斯垂克（約 2.5h 車程），16:30 抵達'}]},
+     {l:'晚餐', items:[{t:'建議 Marres Kitchen 地中海菜', p:P('Marres Kitchen','Marres Kitchen, Maastricht')}]},
+   ]},
+  {n:6, date:'07/02', mo:'七月', wd:'星期四', c:'nl', theme:'馬斯垂克 · 音樂會',
+   blocks:[
+     {l:'中餐', items:[{t:'12:30 BBQ 豬肋排＆漢堡（已訂位，待確認）'}]},
+     {l:'下午', items:[{t:'附近閒逛、好好休息，準備晚上的音樂會'}]},
+     {l:'晚餐', items:[{t:'外送，建議日式拉麵'}]},
+     {l:'晚上', items:[{t:'21:00 音樂會（約 20:40 慢慢走過去）'}]},
+   ]},
+  {n:7, date:'07/03', mo:'七月', wd:'星期五', c:'nl', theme:'馬斯垂克市區導覽',
+   blocks:[
+     {l:'中餐', items:[{t:'比利時餐廳（尚未訂位）'}]},
+     {l:'下午', items:[
+        {t:'13:30 飯店集合，市區導覽（導遊 4h）'},
+        {t:'弗萊特霍夫廣場 Vrijthof', p:P('Vrijthof','Vrijthof, Maastricht')},
+        {t:'聖色法斯聖殿 Sint-Servaasbasiliek（荷蘭最古老教堂）', p:P('Sint-Servaasbasiliek','Sint-Servaasbasiliek, Maastricht')},
+        {t:'天堂書店 Boekhandel Dominicanen（世界最美書店之一）', p:P('天堂書店 Boekhandel Dominicanen','Boekhandel Dominicanen, Maastricht')},
+        {t:'Stokstraat 奢華購物街（精品 Kiki Niesten）', p:P('Kiki Niesten / Stokstraat','Kiki Niesten, Maastricht')},
+        {t:'耶克爾河畔最古老水磨坊麵包店，品嚐林堡果餡餅 vlaai'},
+     ]},
+     {l:'晚餐', items:[{t:'建議泰國菜 Tabkew', p:P('Tabkew','Tabkew, Maastricht')}]},
+   ]},
+  {n:8, date:'07/04', mo:'七月', wd:'星期六', c:'hu', theme:'搭機前往布達佩斯',
+   blocks:[
+     {l:'早上', items:[{t:'10:30 飯店出發前往機場'}]},
+     {l:'中餐', items:[{t:'機場吃飯'}]},
+     {l:'下午', items:[{t:'16:30 抵達布達佩斯 → 飯店休息後出門閒逛吃飯'}]},
+     {l:'晚餐', items:[{t:'市集吃飯或找餐廳', p:P('中央市場 Central Market Hall','Central Market Hall, Budapest')}]},
+   ]},
+  {n:9, date:'07/05', mo:'七月', wd:'星期日', c:'hu', theme:'舊城 · 城堡 · 歷史博物館',
+   blocks:[
+     {l:'下午', items:[
+        {t:'14:00 飯店集合，搭快艇前往舊城區'},
+        {t:'纜車上城堡 + 布達佩斯歷史博物館', p:P('布達城堡 Buda Castle','Buda Castle, Budapest')},
+        {t:'馬提亞斯教堂 Matthias Church（國王登基地）', p:P('馬提亞斯教堂 Matthias Church','Matthias Church, Budapest')},
+        {t:'漁夫堡 Fisherman’s Bastion 觀景（舊城看新城全景，導遊 4h）', p:P('漁夫堡 Fisherman’s Bastion','Fishermans Bastion, Budapest')},
+     ]},
+     {l:'晚餐', items:[{t:'19:30 傳統匈牙利餐廳（吉普賽音樂，旅行社訂位待確認）'}]},
+   ]},
+  {n:10, date:'07/06', mo:'七月', wd:'星期一', c:'hu', theme:'聖安德烈藝術小鎮一日遊',
+   blocks:[
+     {l:'早上', items:[
+        {t:'10:00 飯店集合出發'},
+        {t:'聖安德烈 Szentendre — 距布達佩斯約 30 英里的地中海風藝術小鎮', p:P('聖安德烈 Szentendre','Szentendre, Hungary')},
+        {t:'馬芝潘博物館（杏仁糖）、多博斯糕點博物館'},
+     ]},
+     {l:'中餐', items:[{t:'鎮上找餐廳'}]},
+     {l:'下午', items:[{t:'約 14:00 回布達佩斯，休息後閒逛'}]},
+     {l:'晚餐', items:[{t:'Spicy Fish 川菜（尚未訂位）', p:P('Spicy Fish','Spicy Fish, Budapest')}]},
+   ]},
+  {n:11, date:'07/07', mo:'七月', wd:'星期二', c:'hu', theme:'中央市場 · 英雄廣場 · 遊船',
+   blocks:[
+     {l:'早上', items:[
+        {t:'10:00 煙囪捲工坊做麵包（盈汎／一婷／Leni）'},
+        {t:'11:00 彼得抵達布達佩斯'},
+     ]},
+     {l:'下午', items:[
+        {t:'14:00 飯店出發'},
+        {t:'中央市場 Central Market Hall', p:P('中央市場 Central Market Hall','Central Market Hall, Budapest')},
+        {t:'英雄廣場 + 千年紀念碑（途經安德拉什大街，世界遺產）', p:P('英雄廣場 Heroes’ Square','Heroes Square, Budapest')},
+        {t:'城市公園、音樂之家 House of Music（藤本壯介作品，導遊 5h）', p:P('音樂之家 House of Music','House of Music Hungary, Budapest')},
+     ]},
+     {l:'晚餐', items:[{t:'尚未決定'}]},
+     {l:'晚上', items:[{t:'20:00 飯店出發遊河看夕陽（導遊 2h，船 1h）｜遊船可能改 7/5 或 7/6'}]},
+   ]},
+  {n:12, date:'07/08', mo:'七月', wd:'星期三', c:'hu', theme:'快樂回家',
+   blocks:[
+     {l:'早上', items:[{t:'12:30 飯店出發前往機場'}]},
+     {l:'中餐', items:[{t:'機場吃飯'}]},
+   ]},
+];
+
+const PLACES = [
+  {city:'阿姆斯特丹', cls:'nl', cats:[
+    {t:'市集', items:[
+      P('Albert Cuyp Markt','Albert Cuyp Markt, Amsterdam','飯店開車 5 分／走路 13 分（900m）'),
+      P('Zuidermarkt','Zuidermarkt, Amsterdam','週末農夫市集'),
+      P('C&C Asian Market','C&C Asian Market, Amsterdam','距 Albert Cuyp 走路 8 分（600m）'),
+    ]},
+    {t:'購物', items:[
+      P('Nieuwe Spiegelstraat','Nieuwe Spiegelstraat, Amsterdam','小飾品／古董商店街'),
+      P('De Negen Straatjes','De Negen Straatjes, Amsterdam','設計師小店區（6/30 行程）'),
+      P('Cheese Museum Amsterdam','Cheese Museum Amsterdam','起士博物館，也是商店'),
+    ]},
+    {t:'餐廳', items:[
+      P("'t Heemelrijck","'t Heemelrijck, Amsterdam",'荷蘭餐廳，亞洲超市附近'),
+      P('The Pancake Bakery','The Pancake Bakery, Amsterdam','各式荷蘭煎餅，起士博物館附近'),
+      P('Hoi Tin','Hoi Tin restaurant, Amsterdam','港式酒樓'),
+      P('Amber Garden','Amber Garden restaurant, Amsterdam','較高級的中餐廳'),
+      P('福祿酒樓','福祿酒樓 Amsterdam','川菜'),
+      P('Restaurant Rijks','Restaurant Rijks, Amsterdam','國家美術館內米其林'),
+      P('Foodhallen','Foodhallen, Amsterdam','當地小吃市集'),
+    ]},
+    {tx:'沒有固定店名的口袋名單', list:[
+      '台灣小吃（滷肉飯／刈包）','阿根廷餐廳豬肋排','巧克力餅乾（隊伍不長就買，好吃）',
+      'Gelato 義式冰淇淋','味道很正的日式拉麵','被印尼同學認證的泰式船麵','鬆餅早午餐',
+    ]},
+  ]},
+  {city:'馬斯垂克', cls:'nl', cats:[
+    {t:'景點', items:[
+      P('Vrijthof 弗萊特霍夫廣場','Vrijthof, Maastricht','市區中心廣場'),
+      P('Sint-Servaasbasiliek','Sint-Servaasbasiliek, Maastricht','荷蘭最古老教堂'),
+      P('天堂書店 Boekhandel Dominicanen','Boekhandel Dominicanen, Maastricht','13 世紀教堂改建，世界最美書店之一'),
+      P('Stokstraat / Kiki Niesten','Kiki Niesten, Maastricht','奢華精品購物街'),
+    ]},
+    {t:'餐廳', items:[
+      P('Marres Kitchen','Marres Kitchen, Maastricht','地中海菜（7/1 建議）'),
+      P('Tabkew','Tabkew, Maastricht','泰國菜（7/3 建議）'),
+    ]},
+    {tx:'口袋名單', list:['BBQ 豬肋排＆漢堡（7/2 已訂位）','比利時餐廳（7/3 中餐）','日式拉麵（外送）','林堡果餡餅 vlaai（水磨坊麵包店）']},
+  ]},
+  {city:'布達佩斯', cls:'hu', cats:[
+    {t:'市集', items:[
+      P('Central Market Hall','Central Market Hall, Budapest','超大中央市場，什麼都有'),
+    ]},
+    {t:'景點', items:[
+      P('漁夫堡 Fisherman’s Bastion','Fishermans Bastion, Budapest','舊城觀景，看新城全景'),
+      P('馬提亞斯教堂 Matthias Church','Matthias Church, Budapest','國王登基的地方'),
+      P('英雄廣場 Heroes’ Square','Heroes Square, Budapest','千年紀念碑'),
+      P('安德拉什大街 Andrássy','Andrassy Avenue, Budapest','世界遺產大道'),
+      P('音樂之家 House of Music','House of Music Hungary, Budapest','藤本壯介作品'),
+      P('聖安德烈 Szentendre','Szentendre, Hungary','地中海風藝術小鎮'),
+    ]},
+    {t:'商店', items:[
+      P('Bomo Art','Bomo Art, Budapest','文具店，飯店走 6 分（400m）'),
+      P('Falk Miksa utca','Falk Miksa utca, Budapest','古董店街區，飯店開車 10 分'),
+    ]},
+    {t:'餐廳', items:[
+      P('New York Café','New York Cafe, Budapest','世界最美咖啡館之一'),
+      P('Stand Restaurant','Stand Restaurant, Budapest','米其林 2 星'),
+      P('Spicy Fish','Spicy Fish, Budapest','川菜，有酸辣魚'),
+    ]},
+    {tx:'口袋名單', list:['傳統匈牙利餐廳（吉普賽音樂，彼得朋友推薦）','泰國菜','中式家常菜','台灣小吃店（選擇有限）','Tapas 中東地中海小菜','中式餐廳','港式茶餐廳']},
+  ]},
+];
+
+const DUTCH = [
+  ['你好','Hallo','哈囉'],['早安','Goedemorgen','胡得・摩根'],
+  ['謝謝','Dank je wel','當克・耶・歪'],['請／不客氣','Alstublieft','阿斯圖・布利福特'],
+  ['不好意思','Pardon','帕・東'],['是／否','Ja / Nee','亞／內'],
+  ['多少錢？','Hoeveel kost het?','胡費爾・寇斯特・黑特'],['請給我帳單','De rekening, alstublieft','德・雷克寧，阿斯圖布利福特'],
+  ['廁所在哪？','Waar is het toilet?','哇・伊斯・黑特・托瓦雷特'],['你會說英文嗎？','Spreekt u Engels?','斯普雷克特・淤・恩格斯'],
+  ['好吃','Lekker','雷克爾'],['乾杯','Proost','普羅斯特'],
+];
+const HUN = [
+  ['你好（熟）','Szia','西呀'],['您好','Jó napot','優・那剖特'],
+  ['謝謝','Köszönöm','庫・斯・努姆'],['請','Kérem','凱・倫姆'],
+  ['不好意思','Elnézést','艾爾・內傑斯特'],['是／否','Igen / Nem','伊根／內姆'],
+  ['多少錢？','Mennyibe kerül?','門尼貝・凱魯爾'],['請給我帳單','A számlát, kérem','阿・薩姆拉特，凱倫姆'],
+  ['廁所在哪？','Hol van a mosdó?','后爾・萬・阿・摩什豆'],['你會說英文嗎？','Beszél angolul?','貝塞爾・安戈魯爾'],
+  ['好吃','Finom','菲・農姆'],['乾杯','Egészségedre!','艾蓋謝給德雷'],
+];
+
+/* ============ MAPS ============ */
+let mapsApp = 'google';
+function toggleMaps(){
+  mapsApp = mapsApp === 'google' ? 'apple' : 'google';
+  document.getElementById('mapsName').textContent = mapsApp === 'google' ? 'Google' : 'Apple';
+}
+function navTo(q){
+  const enc = encodeURIComponent(q);
+  const url = mapsApp === 'apple'
+    ? 'https://maps.apple.com/?q=' + enc
+    : 'https://www.google.com/maps/search/?api=1&query=' + enc;
+  window.open(url, '_blank');
+}
+
+/* ============ RENDER ============ */
+function navBtn(p, cls){
+  return `<button class="nav-btn ${cls}" onclick="navTo('${p.q.replace(/'/g,"\\'")}')">${NAVSVG}導航</button>`;
+}
+function renderItem(it, cls){
+  const timeMatch = it.t.match(/^(\d{1,2}:\d{2})/);
+  let body = it.t;
+  if(timeMatch){ body = `<span class="time">${timeMatch[1]}</span>` + it.t.slice(timeMatch[1].length); }
+  let html = `<div class="item"><div class="dot"></div><div class="tx">${body}`;
+  if(it.p){ html += `<div>${navBtn(it.p, cls)}</div>`; }
+  html += `</div></div>`;
+  return html;
+}
+function renderDayBody(day){
+  return day.blocks.map(b=>{
+    return `<div class="block"><div class="block-label">${b.l}</div>${b.items.map(it=>renderItem(it, day.c)).join('')}</div>`;
+  }).join('');
+}
+function renderDays(){
+  document.getElementById('daysHost').innerHTML = DAYS.map(d=>`
+    <div class="day ${d.c}" id="day-${d.n}">
+      <div class="day-head" onclick="toggleDay(${d.n})">
+        <div class="day-num"><span class="d">${d.date.split('/')[1]}</span><span class="m">${d.mo.replace('月','')}月</span></div>
+        <div class="day-meta">
+          <div class="wd">DAY ${d.n} · ${d.wd} <span class="chip ${d.c}" style="margin-left:4px">${d.c==='nl'?'荷蘭':'匈牙利'}</span></div>
+          <div class="th">${d.theme}</div>
+        </div>
+        <div class="caret">▸</div>
+      </div>
+      <div class="day-body">${renderDayBody(d)}</div>
+    </div>`).join('');
+}
+function toggleDay(n){ document.getElementById('day-'+n).classList.toggle('open'); }
+
+function renderToday(){
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth()+1, d = now.getDate();
+  const host = document.getElementById('todayHost');
+  // find matching day
+  let match = DAYS.find(x=> y===2026 && Number(x.date.split('/')[0])===m && Number(x.date.split('/')[1])===d );
+  const start = new Date(2026,5,27), end = new Date(2026,6,8);
+  const today0 = new Date(y,m-1,d);
+
+  if(match){
+    const next = match.blocks.flatMap(b=>b.items).find(it=>it.p);
+    host.innerHTML = `
+      <div class="hero ${match.c}">
+        <svg class="tile" viewBox="0 0 100 100" fill="#fff"><path d="M50 5 60 40 95 50 60 60 50 95 40 60 5 50 40 40z"/></svg>
+        <div class="hlabel">今天 · DAY ${match.n} · ${match.c==='nl'?'荷蘭':'匈牙利'}</div>
+        <div class="hdate">${match.mo}${Number(match.date.split('/')[1])}日</div>
+        <div class="htheme">${match.theme}</div>
+        ${next?`<div class="hero-nav"><button class="nav-btn" onclick="navTo('${next.p.q.replace(/'/g,"\\'")}')">${NAVSVG}導航到 ${next.p.name}</button></div>`:''}
+      </div>
+      <div class="section-label">今日行程 <span class="ln"></span></div>
+      <div class="day ${match.c} open">${renderDayBody(match)}</div>`;
+  } else if(today0 < start){
+    const diff = Math.ceil((start - today0)/86400000);
+    const f = DAYS[0];
+    host.innerHTML = `
+      <div class="hero pre">
+        <svg class="tile" viewBox="0 0 100 100" fill="#fff"><path d="M50 5 60 40 95 50 60 60 50 95 40 60 5 50 40 40z"/></svg>
+        <div class="hlabel">距離出發還有</div>
+        <div class="hcount">${diff} <span style="font-size:18px;font-weight:500;opacity:.8">天</span></div>
+        <div class="htheme" style="margin-top:6px">6/26 EK367 23:50 台北出發 · 第一站阿姆斯特丹</div>
+      </div>
+      <div class="section-label">第一天預覽 · DAY 1 <span class="ln"></span></div>
+      <div class="day nl open">${renderDayBody(f)}</div>`;
+  } else {
+    host.innerHTML = `
+      <div class="hero pre">
+        <div class="hlabel">旅程</div>
+        <div class="hdate">已圓滿結束</div>
+        <div class="htheme">歡迎回家 · 可隨時回看行程與地點分頁</div>
+      </div>`;
+  }
+}
+
+function renderPlaces(){
+  document.getElementById('placesHost').innerHTML = PLACES.map(city=>{
+    const head = `<div class="section-label"><span class="chip ${city.cls}">${city.cls==='nl'?'荷蘭':'匈牙利'}</span> ${city.city} <span class="ln"></span></div>`;
+    const body = city.cats.map(cat=>{
+      if(cat.list){
+        return `<div class="card"><div class="cat-title">${cat.tx}</div><div class="text-list">${cat.list.map(x=>`<div class="tl">${x}</div>`).join('')}</div></div>`;
+      }
+      const rows = cat.items.map(p=>`
+        <div class="place">
+          <div class="pinfo"><div class="pname">${p.name}</div>${p.note?`<div class="pnote">${p.note}</div>`:''}</div>
+          <button class="icon-btn ${city.cls}" onclick="navTo('${p.q.replace(/'/g,"\\'")}')">${NAVSVG}</button>
+        </div>`).join('');
+      return `<div class="card"><div class="cat-title">${cat.t}</div>${rows}</div>`;
+    }).join('<div style="height:10px"></div>');
+    return head + body;
+  }).join('');
+}
+
+function renderHotels(){
+  document.getElementById('hotelsHost').innerHTML = HOTELS.map(h=>`
+    <div class="info-row">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg></div>
+      <div class="id">
+        <div class="t">${h.name} <span class="chip ${h.country}" style="margin-left:3px">${h.city}</span></div>
+        <div class="s"><span class="big">${h.range}</span></div>
+      </div>
+      <button class="icon-btn ${h.country}" onclick="navTo('${h.q.replace(/'/g,"\\'")}')">${NAVSVG}</button>
+    </div>`).join('');
+}
+
+function renderPhrases(data, host){
+  const sayIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>';
+  document.getElementById(host).innerHTML = data.map((p,i)=>`
+    <div class="phrase">
+      <div class="ph-zh">${p[0]}</div>
+      <div class="ph-main"><div class="ph-fl">${p[1]}</div><div class="ph-pr">${p[2]}</div></div>
+      <button class="say" onclick="speak('${p[1].replace(/'/g,"\\'")}','${host==='dutchHost'?'nl-NL':'hu-HU'}')">${sayIcon}</button>
+    </div>`).join('');
+}
+function speak(text, lang){
+  try{
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang; u.rate = .85;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ============ CONVERTER ============ */
+function n(id){ const v=parseFloat(document.getElementById(id).value); return isNaN(v)?0:v; }
+function convEUR(src){
+  const r = n('rateEUR');
+  if(src!=='twd'){ document.getElementById('eurTwd').value = +(n('eurIn')*r).toFixed(0); }
+  else { document.getElementById('eurIn').value = r? +(n('eurTwd')/r).toFixed(2):0; }
+}
+function convHUF(src){
+  const r = n('rateHUF');
+  if(src!=='twd'){ document.getElementById('hufTwd').value = +(n('hufIn')*r).toFixed(0); }
+  else { document.getElementById('hufIn').value = r? +(n('hufTwd')/r).toFixed(0):0; }
+}
+
+/* ============ NAV ============ */
+function go(s){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  document.getElementById('screen-'+s).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.s===s));
+  window.scrollTo(0,0);
+}
+
+/* ============ INIT ============ */
+renderDays(); renderToday(); renderPlaces(); renderHotels();
+renderPhrases(DUTCH,'dutchHost'); renderPhrases(HUN,'hunHost');
+convEUR('eur'); convHUF('huf');
+
+/* ============ OFFLINE (service worker) ============ */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=> navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
