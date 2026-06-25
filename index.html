@@ -484,7 +484,7 @@ const DAYS = [
 ];
 
 const PLACES = [
-  {city:'阿姆斯特丹', cls:'nl', cats:[
+  {city:'阿姆斯特丹', cls:'nl', note:'飯店 Okura 在 De Pijp、Amstel 河邊，以下順遊景點都走得到。', cats:[
     {t:'市集', items:[
       P('Albert Cuyp Markt','Albert Cuyp Markt, Amsterdam','飯店開車 5 分／走路 13 分（900m）'),
       P('Zuidermarkt','Zuidermarkt, Amsterdam','週末農夫市集'),
@@ -504,12 +504,24 @@ const PLACES = [
       P('Restaurant Rijks','Restaurant Rijks, Amsterdam','國家美術館內米其林'),
       P('Foodhallen','Foodhallen, Amsterdam','當地小吃市集'),
     ]},
+    {t:'飯店內餐廳（Okura）', items:[
+      P('Sazanka','Teppanyaki Sazanka, Hotel Okura Amsterdam','鐵板燒，米其林一星（一樓）'),
+      P('Yamazato','Yamazato, Hotel Okura Amsterdam','日式懷石／壽司，米其林一星（一樓）'),
+      P('Ciel Bleu','Ciel Bleu, Hotel Okura Amsterdam','法式 fine dining，米其林二星（23 樓景觀）'),
+      P('Serre','Serre restaurant, Hotel Okura Amsterdam','全日餐廳，Bib Gourmand 平價推薦'),
+    ]},
+    {t:'順遊景點 · Claude 建議', tip:true, items:[
+      P('海尼根體驗館 Heineken Experience','Heineken Experience, Amsterdam','啤酒互動體驗，De Pijp，步行約 10 分'),
+      P('Sarphatipark','Sarphatipark, Amsterdam','在地人散步綠地，步行約 5 分'),
+      P('博物館廣場 Museumplein','Museumplein, Amsterdam','國家／梵谷／Moco 美術館聚集，步行約 15 分'),
+      P('瘦橋 Magere Brug','Magere Brug, Amsterdam','Amstel 河上經典木吊橋，傍晚會亮燈'),
+    ]},
     {tx:'沒有固定店名的口袋名單', list:[
       '台灣小吃（滷肉飯／刈包）','阿根廷餐廳豬肋排','巧克力餅乾（隊伍不長就買，好吃）',
       'Gelato 義式冰淇淋','味道很正的日式拉麵','被印尼同學認證的泰式船麵','鬆餅早午餐',
     ]},
   ]},
-  {city:'馬斯垂克', cls:'nl', cats:[
+  {city:'馬斯垂克', cls:'nl', note:'餐廳需從清單挑 4–5 間；別忘了 7/4 14:35 飛布達佩斯前要先吃中餐。飯店在市中心，景點皆步行可達。', cats:[
     {t:'景點', items:[
       P('Vrijthof 弗萊特霍夫廣場','Vrijthof, Maastricht','市區中心廣場'),
       P('Sint-Servaasbasiliek','Sint-Servaasbasiliek, Maastricht','荷蘭最古老教堂'),
@@ -518,11 +530,20 @@ const PLACES = [
     ]},
     {t:'餐廳', items:[
       P('Marres Kitchen','Marres Kitchen, Maastricht','地中海菜（7/1 建議）'),
-      P('Tabkew','Tabkew, Maastricht','泰國菜（7/3 建議）'),
+      P('Tabkew','Tabkew, Maastricht','泰國菜，只開晚上、週三休（7/3 建議）'),
+      P('King George','King George, Maastricht','中東菜，會用較多香料'),
+      P('Prix de Rome','Prix de Rome, Maastricht','西式 fine dining'),
+      P("Harry's",'Harrys restaurant, Maastricht','西餐廳，菜系較混搭'),
     ]},
-    {tx:'口袋名單', list:['BBQ 豬肋排＆漢堡（7/2 已訂位）','比利時餐廳（7/3 中餐）','日式拉麵（外送）','林堡果餡餅 vlaai（水磨坊麵包店）']},
+    {t:'順遊景點 · Claude 建議', tip:true, items:[
+      P('聖母聖殿 Onze-Lieve-Vrouwebasiliek','Onze-Lieve-Vrouwebasiliek, Maastricht','點蠟燭祈願的星光小聖堂'),
+      P('紅塔 Sint-Janskerk','Sint-Janskerk, Maastricht','可登塔俯瞰全城，在聖色法斯旁'),
+      P('地獄之門 Helpoort','Helpoort, Maastricht','荷蘭最古老城門，耶克爾河畔'),
+      P('Wyck 區','Wyck, Maastricht','過聖色法斯橋對岸，咖啡小店街區'),
+    ]},
+    {tx:'口袋名單', list:['BBQ 豬肋排＆漢堡（7/2 已訂位，肉看起來很專業）','比利時餐廳（7/3 中餐）','亞洲麵店（有台灣牛肉麵）','中國菜','越南菜','日式拉麵（外送）','林堡果餡餅 vlaai（水磨坊麵包店）']},
   ]},
-  {city:'布達佩斯', cls:'hu', cats:[
+  {city:'布達佩斯', cls:'hu', note:'餐廳需從清單挑 5 間；最後一天 14:30 班機（去機場前留意用餐時間）。飯店 Al Habtoor 在 Erzsébet tér 市中心，以下順遊景點多為步行可達。', cats:[
     {t:'市集', items:[
       P('Central Market Hall','Central Market Hall, Budapest','超大中央市場，什麼都有'),
     ]},
@@ -535,7 +556,10 @@ const PLACES = [
       P('聖安德烈 Szentendre','Szentendre, Hungary','地中海風藝術小鎮'),
     ]},
     {t:'商店', items:[
-      P('Bomo Art','Bomo Art, Budapest','文具店，飯店走 6 分（400m）'),
+      P('Bomo Art','Bomo Art, Budapest','手工文具，飯店走 6 分（400m）· <a href="https://www.bomoart.hu/en" target="_blank" rel="noopener">官網</a>'),
+      P('Herend','Herend Porcelain, Budapest','匈牙利皇室名瓷 · <a href="https://herend.com/en" target="_blank" rel="noopener">官網</a>'),
+      P('Zsolnay','Zsolnay Store, Budapest','匈牙利百年名瓷 · <a href="https://www.zsolnay.hu/" target="_blank" rel="noopener">官網</a>'),
+      P('Mono Art & Design','Mono Art and Design, Budapest','匈牙利設計選物 · <a href="https://www.facebook.com/monoartanddesign" target="_blank" rel="noopener">FB</a>'),
       P('Falk Miksa utca','Falk Miksa utca, Budapest','古董店街區，飯店開車 10 分'),
     ]},
     {t:'餐廳', items:[
@@ -543,7 +567,15 @@ const PLACES = [
       P('Stand Restaurant','Stand Restaurant, Budapest','米其林 2 星'),
       P('Spicy Fish','Spicy Fish, Budapest','川菜，有酸辣魚'),
     ]},
-    {tx:'口袋名單', list:['傳統匈牙利餐廳（吉普賽音樂，彼得朋友推薦）','泰國菜','中式家常菜','台灣小吃店（選擇有限）','Tapas 中東地中海小菜','中式餐廳','港式茶餐廳']},
+    {t:'順遊景點 · Claude 建議', tip:true, items:[
+      P('聖伊斯特凡大教堂','St Stephens Basilica, Budapest','可登頂看景，飯店步行約 5 分'),
+      P('塞切尼鏈橋 Chain Bridge','Szechenyi Chain Bridge, Budapest','多瑙河經典地標，步行約 8 分'),
+      P('Vörösmarty 廣場 / Váci 街','Vorosmarty ter, Budapest','購物與咖啡聚集，步行約 5 分'),
+      P('Gozsdu Udvar 中庭','Gozsdu Udvar, Budapest','餐酒小店聚集的熱鬧中庭，步行約 6 分'),
+      P('多哈尼街猶太教堂','Dohany Street Synagogue, Budapest','歐洲最大猶太教堂，步行約 10 分'),
+      P('布達佩斯之眼 摩天輪','Budapest Eye, Budapest','就在飯店旁的 Erzsébet tér 廣場上'),
+    ]},
+    {tx:'口袋名單', list:['傳統匈牙利餐廳（吉普賽音樂，彼得朋友推薦）','匈牙利菜','泰國菜','中式餐廳／中式家常菜','港式茶餐廳','台灣小吃店（選擇有限）','Tapas 中東地中海小菜（多人分食）']},
   ]},
 ];
 
@@ -658,6 +690,7 @@ function renderToday(){
 function renderPlaces(){
   document.getElementById('placesHost').innerHTML = PLACES.map(city=>{
     const head = `<div class="section-label"><span class="chip ${city.cls}">${city.cls==='nl'?'荷蘭':'匈牙利'}</span> ${city.city} <span class="ln"></span></div>`;
+    const note = city.note ? `<p class="intro" style="margin:-4px 4px 10px">${city.note}</p>` : '';
     const body = city.cats.map(cat=>{
       if(cat.list){
         return `<div class="card"><div class="cat-title">${cat.tx}</div><div class="text-list">${cat.list.map(x=>`<div class="tl">${x}</div>`).join('')}</div></div>`;
@@ -667,9 +700,10 @@ function renderPlaces(){
           <div class="pinfo"><div class="pname">${p.name}</div>${p.note?`<div class="pnote">${p.note}</div>`:''}</div>
           <button class="icon-btn ${city.cls}" onclick="navTo('${p.q.replace(/'/g,"\\'")}')">${NAVSVG}</button>
         </div>`).join('');
-      return `<div class="card"><div class="cat-title">${cat.t}</div>${rows}</div>`;
+      const tipChip = cat.tip ? ` <span class="chip gold" style="font-size:10px">建議</span>` : '';
+      return `<div class="card"><div class="cat-title">${cat.t}${tipChip}</div>${rows}</div>`;
     }).join('<div style="height:10px"></div>');
-    return head + body;
+    return head + note + body;
   }).join('');
 }
 
