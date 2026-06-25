@@ -632,7 +632,7 @@ function renderToday(){
         ${next?`<div class="hero-nav"><button class="nav-btn" onclick="navTo('${next.p.q.replace(/'/g,"\\'")}')">${NAVSVG}導航到 ${next.p.name}</button></div>`:''}
       </div>
       <div class="section-label">今日行程 <span class="ln"></span></div>
-      <div class="day ${match.c} open">${renderDayBody(match)}</div>`;
+      <div class="day ${match.c} open"><div class="day-body">${renderDayBody(match)}</div></div>`;
   } else if(today0 < start){
     const diff = Math.ceil((start - today0)/86400000);
     const f = DAYS[0];
@@ -644,7 +644,7 @@ function renderToday(){
         <div class="htheme" style="margin-top:6px">6/26 EK367 23:50 台北出發 · 第一站阿姆斯特丹</div>
       </div>
       <div class="section-label">第一天預覽 · DAY 1 <span class="ln"></span></div>
-      <div class="day nl open">${renderDayBody(f)}</div>`;
+      <div class="day nl open"><div class="day-body">${renderDayBody(f)}</div></div>`;
   } else {
     host.innerHTML = `
       <div class="hero pre">
