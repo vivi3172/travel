@@ -839,11 +839,12 @@ function syncHtml(){
 }
 function setSync(t){ if(t!==undefined) SYNC=t; const el=document.getElementById('syncStatus'); if(el) el.innerHTML = syncHtml(); }
 
+function bust(url){ return url + (url.includes('?') ? '&' : '?') + '_=' + Date.now(); }
 async function fetchShared(){
   if(!SHARED) return;
   setSync('同步中…');
   try{
-    const res = await fetch(SHEET_API_URL, {cache:'no-store'});
+    const res = await fetch(bust(SHEET_API_URL), {cache:'no-store'});
     const data = await res.json();
     STORE = Array.isArray(data) ? data : [];
     cacheShared(); setSync('已同步 '+STORE.length+' 筆'); renderPlaces();
@@ -947,7 +948,7 @@ function buildDaysFromRows(rows){
 async function fetchSchedule(){
   if(!SHARED) return;
   try{
-    const res = await fetch(SHEET_API_URL + '?type=schedule', {cache:'no-store'});
+    const res = await fetch(bust(SHEET_API_URL + '?type=schedule'), {cache:'no-store'});
     const rows = await res.json();
     if(Array.isArray(rows) && rows.length){
       try{ localStorage.setItem(SCHEDULE_CACHE_KEY, JSON.stringify(rows)); }catch(e){}
@@ -1057,6 +1058,9 @@ renderDays(); renderToday(); renderPlaces(); renderHotels();
 renderPhrases(DUTCH,'dutchHost'); renderPhrases(HUN,'hunHost');
 convEUR('eur'); convHUF('huf');
 setSync(); if(SHARED){ fetchShared(); fetchSchedule(); }
+
+// 切回 App（從背景回到前景）時自動重新同步，避免顯示舊資料
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden && SHARED){ fetchShared(); fetchSchedule(); } });
 
 /* ============ OFFLINE (service worker) ============ */
 if('serviceWorker' in navigator){
