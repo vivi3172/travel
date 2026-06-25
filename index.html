@@ -564,7 +564,7 @@ let DAYS = [
 ];
 
 const PLACES = [
-  {city:'阿姆斯特丹', cls:'nl', note:'飯店 Okura 在 De Pijp、Amstel 河邊，順遊景點都走得到。', cats:[
+  {city:'阿姆斯特丹', cls:'nl', note:'飯店 Okura 在 De Pijp、Amstel 河邊，以下順遊景點都走得到。有藍色連結的會直接帶到你們找到的釘選點。', cats:[
     {t:'市集', items:[
       P('Albert Cuyp Markt','Albert Cuyp Markt, Amsterdam','飯店開車 5 分／走路 13 分（900m）'),
       P('Zuidermarkt','Zuidermarkt, Amsterdam','週末農夫市集'),
@@ -607,7 +607,7 @@ const PLACES = [
       P('瘦橋 Magere Brug','Magere Brug, Amsterdam','Amstel 河上經典木橋，散步順遊好拍'),
     ]},
   ]},
-  {city:'馬斯垂克', cls:'nl', note:'7/4 14:35 飛布達佩斯前要先吃中餐。飯店在市中心，景點皆步行可達。', cats:[
+  {city:'馬斯垂克', cls:'nl', note:'餐廳需從清單挑 4–5 間；別忘了 7/4 14:35 飛布達佩斯前要先吃中餐。飯店在市中心，景點皆步行可達。', cats:[
     {t:'景點', items:[
       P('Vrijthof 弗萊特霍夫廣場','Vrijthof, Maastricht','市區中心廣場'),
       P('Sint-Servaasbasiliek','Sint-Servaasbasiliek, Maastricht','荷蘭最古老教堂'),
@@ -636,7 +636,7 @@ const PLACES = [
     ]},
     {tx:'其他', list:['林堡果餡餅 vlaai（耶克爾河畔最古老水磨坊麵包店）']},
   ]},
-  {city:'布達佩斯', cls:'hu', note:'最後一天 14:30 班機（去機場前留意用餐時間）。飯店 Al Habtoor 在 Erzsébet tér 市中心，以下順遊景點多為步行可達。', cats:[
+  {city:'布達佩斯', cls:'hu', note:'餐廳需從清單挑 5 間；最後一天 14:30 班機（去機場前留意用餐時間）。飯店 Al Habtoor 在 Erzsébet tér 市中心，以下順遊景點多為步行可達。', cats:[
     {t:'市集', items:[
       P('Central Market Hall','Central Market Hall, Budapest','超大中央市場，什麼都有'),
     ]},
@@ -840,12 +840,20 @@ function syncHtml(){
 function setSync(t){ if(t!==undefined) SYNC=t; const el=document.getElementById('syncStatus'); if(el) el.innerHTML = syncHtml(); }
 
 function bust(url){ return url + (url.includes('?') ? '&' : '?') + '_=' + Date.now(); }
+async function getJSON(url, tries){
+  tries = tries || 2;
+  let err;
+  for(let i=0;i<tries;i++){
+    try{ const r = await fetch(bust(url), {cache:'no-store'}); return await r.json(); }
+    catch(e){ err = e; await new Promise(s=>setTimeout(s, 700)); }
+  }
+  throw err;
+}
 async function fetchShared(){
   if(!SHARED) return;
   setSync('同步中…');
   try{
-    const res = await fetch(bust(SHEET_API_URL), {cache:'no-store'});
-    const data = await res.json();
+    const data = await getJSON(SHEET_API_URL);
     STORE = Array.isArray(data) ? data : [];
     cacheShared(); setSync('已同步 '+STORE.length+' 筆'); renderPlaces();
   }catch(e){ loadSharedCache(); setSync('離線，顯示上次同步'); renderPlaces(); }
@@ -948,8 +956,7 @@ function buildDaysFromRows(rows){
 async function fetchSchedule(){
   if(!SHARED) return;
   try{
-    const res = await fetch(bust(SHEET_API_URL + '?type=schedule'), {cache:'no-store'});
-    const rows = await res.json();
+    const rows = await getJSON(SHEET_API_URL + '?type=schedule');
     if(Array.isArray(rows) && rows.length){
       try{ localStorage.setItem(SCHEDULE_CACHE_KEY, JSON.stringify(rows)); }catch(e){}
       DAYS = buildDaysFromRows(rows);

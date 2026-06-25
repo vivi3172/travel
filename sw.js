@@ -1,5 +1,5 @@
-const CORE = 'nl-hu-core-v11';
-const RUNTIME = 'nl-hu-runtime-v11';
+const CORE = 'nl-hu-core-v12';
+const RUNTIME = 'nl-hu-runtime-v12';
 
 const ASSETS = [
   './',
@@ -26,9 +26,22 @@ self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
 
-  // 自家檔案：快取優先
+  // 自家檔案
   if (url.origin === location.origin) {
-    e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+    const isDoc = e.request.mode === 'navigate'
+      || url.pathname.endsWith('/') || url.pathname.endsWith('index.html');
+    if (isDoc) {
+      // index.html：線上時一律抓最新（避免重新整理拿到舊版），離線才退回快取
+      e.respondWith(
+        fetch(e.request).then(res => {
+          const copy = res.clone();
+          caches.open(CORE).then(c => c.put(e.request, copy));
+          return res;
+        }).catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
+      );
+    } else {
+      e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+    }
     return;
   }
 
