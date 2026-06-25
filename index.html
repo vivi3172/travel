@@ -288,7 +288,7 @@
 
   <!-- ============ PLACES ============ -->
   <div class="screen" id="screen-places">
-    <p class="intro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="vertical-align:-2px"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> 直接導航。標有 <span class="chip sched">✓ 已排</span> 的是行程內地點；<span class="chip custom">自訂</span> 是補充的。</p>
+    <p class="intro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="vertical-align:-2px"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> 直接導航。標有 <span class="chip sched">✓ 已排</span> 是行程內地點；<span class="chip custom">自訂</span> 是補充。</p>
     <button class="add-place-btn" onclick="openAddForm()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>新增地點</button>
     <div id="syncStatus" class="intro" style="margin:-8px 4px 12px"></div>
     <div id="placesHost"></div>
@@ -564,7 +564,7 @@ let DAYS = [
 ];
 
 const PLACES = [
-  {city:'阿姆斯特丹', cls:'nl', note:'飯店 Okura 在 De Pijp、Amstel 河邊，以下順遊景點都走得到。有藍色連結的會直接帶到你們找到的釘選點。', cats:[
+  {city:'阿姆斯特丹', cls:'nl', note:'飯店 Okura 在 De Pijp、Amstel 河邊，順遊景點都走得到。', cats:[
     {t:'市集', items:[
       P('Albert Cuyp Markt','Albert Cuyp Markt, Amsterdam','飯店開車 5 分／走路 13 分（900m）'),
       P('Zuidermarkt','Zuidermarkt, Amsterdam','週末農夫市集'),
@@ -607,7 +607,7 @@ const PLACES = [
       P('瘦橋 Magere Brug','Magere Brug, Amsterdam','Amstel 河上經典木橋，散步順遊好拍'),
     ]},
   ]},
-  {city:'馬斯垂克', cls:'nl', note:'餐廳需從清單挑 4–5 間；別忘了 7/4 14:35 飛布達佩斯前要先吃中餐。飯店在市中心，景點皆步行可達。', cats:[
+  {city:'馬斯垂克', cls:'nl', note:'7/4 14:35 飛布達佩斯前要先吃中餐。飯店在市中心，景點皆步行可達。', cats:[
     {t:'景點', items:[
       P('Vrijthof 弗萊特霍夫廣場','Vrijthof, Maastricht','市區中心廣場'),
       P('Sint-Servaasbasiliek','Sint-Servaasbasiliek, Maastricht','荷蘭最古老教堂'),
@@ -636,7 +636,7 @@ const PLACES = [
     ]},
     {tx:'其他', list:['林堡果餡餅 vlaai（耶克爾河畔最古老水磨坊麵包店）']},
   ]},
-  {city:'布達佩斯', cls:'hu', note:'餐廳需從清單挑 5 間；最後一天 14:30 班機（去機場前留意用餐時間）。飯店 Al Habtoor 在 Erzsébet tér 市中心，以下順遊景點多為步行可達。', cats:[
+  {city:'布達佩斯', cls:'hu', note:'最後一天 14:30 班機（去機場前留意用餐時間）。飯店 Al Habtoor 在 Erzsébet tér 市中心，以下順遊景點多為步行可達。', cats:[
     {t:'市集', items:[
       P('Central Market Hall','Central Market Hall, Budapest','超大中央市場，什麼都有'),
     ]},
