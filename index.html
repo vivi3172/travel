@@ -83,6 +83,7 @@
   .chip.nl{background:var(--nl-soft);color:var(--nl)}
   .chip.hu{background:var(--hu-soft);color:var(--hu)}
   .chip.gold{background:var(--gold-soft);color:var(--gold)}
+  .chip.sched{background:#E3F0E6;color:#2E7D4F}
   /* ---- cards ---- */
   .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
   .card + .card{margin-top:12px}
@@ -248,7 +249,7 @@
 
   <!-- ============ PLACES ============ -->
   <div class="screen" id="screen-places">
-    <p class="intro">依城市與類別整理。點 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="vertical-align:-2px"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> 直接導航。沒有固定店名的建議列在下方文字清單。</p>
+    <p class="intro">依城市與類別整理。點 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="vertical-align:-2px"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> 直接導航。標有 <span class="chip sched">✓ 已排</span> 的是已排進行程的地點；「順遊景點」為額外備選。</p>
     <div id="placesHost"></div>
   </div>
 
@@ -521,7 +522,7 @@ const PLACES = [
       P('Ciel Bleu','Ciel Bleu, Hotel Okura Amsterdam','法式 fine dining，米其林二星（23 樓景觀）',G('zGBBcGmc8GEPXtN89')),
       P('Serre','Serre restaurant, Hotel Okura Amsterdam','全日餐廳，Bib Gourmand 平價推薦'),
     ]},
-    {t:'順遊景點 · Claude 建議', tip:true, items:[
+    {t:'順遊景點', items:[
       P('博物館廣場 Museumplein','Museumplein, Amsterdam','國家／梵谷／市立／Moco 美術館聚集，步行約 15 分'),
       P('Moco Museum','Moco Museum, Amsterdam','現代藝術，Banksy、草間彌生（Museumplein 旁）'),
       P('市立現代美術館 Stedelijk','Stedelijk Museum, Amsterdam','現代藝術與設計，文藝路線必看'),
@@ -548,7 +549,7 @@ const PLACES = [
       P('日式拉麵','ramen, Maastricht','外送',G('uzMxcoJbCMPTcWaT8')),
       P('越南菜','Vietnamese restaurant, Maastricht','',G('XTGDBqhsDgEi2m8NA')),
     ]},
-    {t:'順遊景點 · Claude 建議', tip:true, items:[
+    {t:'順遊景點', items:[
       P('聖母聖殿 Onze-Lieve-Vrouwebasiliek','Onze-Lieve-Vrouwebasiliek, Maastricht','點蠟燭祈願的星光小聖堂'),
       P('紅塔 Sint-Janskerk','Sint-Janskerk, Maastricht','可登塔俯瞰全城，在聖色法斯旁'),
       P('Bonnefanten 現代美術館','Bonnefantenmuseum, Maastricht','現代藝術＋火箭塔造型建築，過河近 Wyck'),
@@ -589,7 +590,7 @@ const PLACES = [
       P('台灣小吃店','Taiwanese restaurant, Budapest','選擇有限',G('dNHE277n3Ju1xQXw6')),
       P('Tapas（地中海中東）','Mediterranean tapas, Budapest','多人分食小菜',G('9mdUrFHqFwURhkhb7')),
     ]},
-    {t:'順遊景點 · Claude 建議', tip:true, items:[
+    {t:'順遊景點', items:[
       P('聖伊斯特凡大教堂','St Stephens Basilica, Budapest','可登頂看景，飯店步行約 5 分'),
       P('匈牙利國家博物館','Hungarian National Museum, Budapest','文物與歷史，文藝路線（週一休）'),
       P('Központi Antikvárium 古書店','Kozponti Antikvarium, Budapest','全國最大古書／古地圖店，1891 年至今（週日休）'),
@@ -599,6 +600,28 @@ const PLACES = [
     ]},
   ]},
 ];
+
+// 已排進行程的地點 → 對應天數（顯示「已排」標記用）
+const PLANNED = {
+  "'t Heemelrijck":"DAY 1",
+  "Hoi Tin":"DAY 2",
+  "Amber Garden":"DAY 3",
+  "Restaurant Rijks":"DAY 4",
+  "De Negen Straatjes":"DAY 4",
+  "Marres Kitchen":"DAY 5",
+  "Vrijthof 弗萊特霍夫廣場":"DAY 7",
+  "Sint-Servaasbasiliek":"DAY 7",
+  "天堂書店 Boekhandel Dominicanen":"DAY 7",
+  "Stokstraat / Kiki Niesten":"DAY 7",
+  "Tabkew":"DAY 7",
+  "Central Market Hall":"DAY 8・11",
+  "漁夫堡 Fisherman’s Bastion":"DAY 9",
+  "馬提亞斯教堂 Matthias Church":"DAY 9",
+  "聖安德烈 Szentendre":"DAY 10",
+  "Spicy Fish":"DAY 10",
+  "英雄廣場 Heroes’ Square":"DAY 11",
+  "音樂之家 House of Music":"DAY 11",
+};
 
 const DUTCH = [
   ['你好','Hallo','哈囉'],['早安','Goedemorgen','胡得・摩根'],
@@ -720,11 +743,14 @@ function renderPlaces(){
       if(cat.list){
         return `<div class="card"><div class="cat-title">${cat.tx}</div><div class="text-list">${cat.list.map(x=>`<div class="tl">${x}</div>`).join('')}</div></div>`;
       }
-      const rows = cat.items.map(p=>`
+      const rows = cat.items.map(p=>{
+        const sched = PLANNED[p.name] ? ` <span class="chip sched">✓ 已排 ${PLANNED[p.name]}</span>` : '';
+        return `
         <div class="place">
-          <div class="pinfo"><div class="pname">${p.name}</div>${p.note?`<div class="pnote">${p.note}</div>`:''}</div>
+          <div class="pinfo"><div class="pname">${p.name}${sched}</div>${p.note?`<div class="pnote">${p.note}</div>`:''}</div>
           <button class="icon-btn ${city.cls}" onclick="${navAttr(p)}">${NAVSVG}</button>
-        </div>`).join('');
+        </div>`;
+      }).join('');
       const tipChip = cat.tip ? ` <span class="chip gold" style="font-size:10px">建議</span>` : '';
       return `<div class="card"><div class="cat-title">${cat.t}${tipChip}</div>${rows}</div>`;
     }).join('<div style="height:10px"></div>');
