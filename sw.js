@@ -1,5 +1,5 @@
-const CORE = 'nl-hu-core-v4';
-const RUNTIME = 'nl-hu-runtime-v4';
+const CORE = 'nl-hu-core-v6';
+const RUNTIME = 'nl-hu-runtime-v6';
 
 const ASSETS = [
   './',

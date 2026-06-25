@@ -363,8 +363,9 @@ const HOTELS = [
   {country:'hu', name:'Al Habtoor Palace Budapest', city:'Budapest', range:'7/4 – 7/8', q:'Al Habtoor Palace Budapest'},
 ];
 
-// place helper
-const P = (name, q, note) => ({name, q, note});
+// place helper（url 可選：有就直接開該 Google Maps 釘選點）
+const P = (name, q, note, url) => ({name, q, note, url});
+const G = code => 'https://maps.app.goo.gl/' + code;
 
 const DAYS = [
   {n:1, date:'06/27', mo:'六月', wd:'星期六', c:'nl', theme:'抵達 · 採買 · 散步',
@@ -380,7 +381,7 @@ const DAYS = [
   {n:2, date:'06/28', mo:'六月', wd:'星期日', c:'nl', theme:'梵谷美術館',
    blocks:[
      {l:'早上', items:[{t:'10:00 荷蘭焦糖煎餅工作坊（盈汎／一婷／Leni），10:50 結束'}]},
-     {l:'中餐', items:[{t:'12:30 Hoi Tin 港式酒樓（一婷已訂位，約 12:00 出發）', p:P('Hoi Tin','Hoi Tin restaurant, Amsterdam')}]},
+     {l:'中餐', items:[{t:'12:30 Hoi Tin 港式酒樓（一婷已訂位，約 12:00 出發）', p:P('Hoi Tin','Hoi Tin restaurant, Amsterdam',null,G('GzGRfS9QiUrCVxD89'))}]},
      {l:'下午', items:[{t:'梵谷美術館（導遊 3h，車程約 20 分）', p:P('梵谷美術館 Van Gogh Museum','Van Gogh Museum, Amsterdam')}]},
      {l:'晚餐', items:[{t:'到時候決定'}]},
    ]},
@@ -394,7 +395,7 @@ const DAYS = [
      ]},
      {l:'中餐', items:[{t:'當地找'}]},
      {l:'下午', items:[{t:'約 17:00 回到阿姆斯特丹'}]},
-     {l:'晚餐', items:[{t:'19:30 Amber Garden 高級中餐（一婷已訂位，約 19:00 出發）', p:P('Amber Garden','Amber Garden restaurant, Amsterdam')}]},
+     {l:'晚餐', items:[{t:'19:30 Amber Garden 高級中餐（一婷已訂位，約 19:00 出發）', p:P('Amber Garden','Amber Garden restaurant, Amsterdam',null,G('qkmzaWp2PPMqVmj36'))}]},
    ]},
   {n:4, date:'06/30', mo:'六月', wd:'星期二', c:'nl', theme:'國家美術館 · 遊河 · 逛街',
    blocks:[
@@ -411,7 +412,7 @@ const DAYS = [
      {l:'早上', items:[{t:'10:00 自行前往 NEMO 科學博物館（盈汎／一婷／Leni）', p:P('NEMO 科學博物館','NEMO Science Museum, Amsterdam')}]},
      {l:'中餐', items:[{t:'建議飯店日式便當'}]},
      {l:'下午', items:[{t:'14:00 飯店集合 → 馬斯垂克（約 2.5h 車程），16:30 抵達'}]},
-     {l:'晚餐', items:[{t:'建議 Marres Kitchen 地中海菜', p:P('Marres Kitchen','Marres Kitchen, Maastricht')}]},
+     {l:'晚餐', items:[{t:'建議 Marres Kitchen 地中海菜', p:P('Marres Kitchen','Marres Kitchen, Maastricht',null,G('BQ2ZrdiS3bk9AZ2j6'))}]},
    ]},
   {n:6, date:'07/02', mo:'七月', wd:'星期四', c:'nl', theme:'馬斯垂克 · 音樂會',
    blocks:[
@@ -431,7 +432,7 @@ const DAYS = [
         {t:'Stokstraat 奢華購物街（精品 Kiki Niesten）', p:P('Kiki Niesten / Stokstraat','Kiki Niesten, Maastricht')},
         {t:'耶克爾河畔最古老水磨坊麵包店，品嚐林堡果餡餅 vlaai'},
      ]},
-     {l:'晚餐', items:[{t:'建議泰國菜 Tabkew', p:P('Tabkew','Tabkew, Maastricht')}]},
+     {l:'晚餐', items:[{t:'建議泰國菜 Tabkew', p:P('Tabkew','Tabkew, Maastricht',null,G('gKRCyn8mYJ9JzinZA'))}]},
    ]},
   {n:8, date:'07/04', mo:'七月', wd:'星期六', c:'hu', theme:'搭機前往布達佩斯',
    blocks:[
@@ -459,7 +460,7 @@ const DAYS = [
      ]},
      {l:'中餐', items:[{t:'鎮上找餐廳'}]},
      {l:'下午', items:[{t:'約 14:00 回布達佩斯，休息後閒逛'}]},
-     {l:'晚餐', items:[{t:'Spicy Fish 川菜（尚未訂位）', p:P('Spicy Fish','Spicy Fish, Budapest')}]},
+     {l:'晚餐', items:[{t:'Spicy Fish 川菜（尚未訂位）', p:P('Spicy Fish','Spicy Fish, Budapest',null,G('mdriZyJiqACGxVMQ9'))}]},
    ]},
   {n:11, date:'07/07', mo:'七月', wd:'星期二', c:'hu', theme:'中央市場 · 英雄廣場 · 遊船',
    blocks:[
@@ -484,7 +485,7 @@ const DAYS = [
 ];
 
 const PLACES = [
-  {city:'阿姆斯特丹', cls:'nl', note:'飯店 Okura 在 De Pijp、Amstel 河邊，以下順遊景點都走得到。', cats:[
+  {city:'阿姆斯特丹', cls:'nl', note:'飯店 Okura 在 De Pijp、Amstel 河邊，以下順遊景點都走得到。有藍色連結的會直接帶到你們找到的釘選點。', cats:[
     {t:'市集', items:[
       P('Albert Cuyp Markt','Albert Cuyp Markt, Amsterdam','飯店開車 5 分／走路 13 分（900m）'),
       P('Zuidermarkt','Zuidermarkt, Amsterdam','週末農夫市集'),
@@ -498,27 +499,33 @@ const PLACES = [
     {t:'餐廳', items:[
       P("'t Heemelrijck","'t Heemelrijck, Amsterdam",'荷蘭餐廳，亞洲超市附近'),
       P('The Pancake Bakery','The Pancake Bakery, Amsterdam','各式荷蘭煎餅，起士博物館附近'),
-      P('Hoi Tin','Hoi Tin restaurant, Amsterdam','港式酒樓'),
-      P('Amber Garden','Amber Garden restaurant, Amsterdam','較高級的中餐廳'),
-      P('福祿酒樓','福祿酒樓 Amsterdam','川菜'),
+      P('Hoi Tin','Hoi Tin restaurant, Amsterdam','港式酒樓',G('GzGRfS9QiUrCVxD89')),
+      P('Amber Garden','Amber Garden restaurant, Amsterdam','較高級的中餐廳',G('qkmzaWp2PPMqVmj36')),
+      P('福祿酒樓','福祿酒樓 Amsterdam','川菜',G('ApTzifab5MDu8Ker5')),
       P('Restaurant Rijks','Restaurant Rijks, Amsterdam','國家美術館內米其林'),
-      P('Foodhallen','Foodhallen, Amsterdam','當地小吃市集'),
+      P('Foodhallen','Foodhallen, Amsterdam','當地小吃市集',G('QUAuumadsJ4sDSRB9')),
+      P('豬肋排（阿根廷餐廳）','Argentinian ribs restaurant, Amsterdam','阿根廷烤肋排',G('TbojgPVjHULApV2s5')),
+      P('台灣小吃（滷肉飯／刈包）','Taiwanese restaurant, Amsterdam','滷肉飯、刈包',G('zTGTobDq3FtV29wB7')),
+      P('日式拉麵','ramen, Amsterdam','味道很正',G('x7QVJ9psedZAwc8f9')),
+      P('泰式船麵','Thai boat noodles, Amsterdam','印尼同學認證的泰式麵',G('oGsRAByuE6q7exKcA')),
+    ]},
+    {t:'小食・點心', items:[
+      P('薯條 Fable','Fable fries, Amsterdam','推薦他們的 special 口味',G('8BeVbYY8kxSsDAtcA')),
+      P('巧克力餅乾','chocolate chip cookie, Amsterdam','排隊通常很快，好吃',G('USD1UkEj9iTzLq9G9')),
+      P('Gelato','gelato, Amsterdam','口袋名單（還沒吃過）',G('9vn8Uc97yjUZeugu5')),
+      P('鬆餅早午餐','pancake brunch, Amsterdam','很多人推（還沒吃過）',G('vYJVbwg6DFVXxfkZA')),
     ]},
     {t:'飯店內餐廳（Okura）', items:[
-      P('Sazanka','Teppanyaki Sazanka, Hotel Okura Amsterdam','鐵板燒，米其林一星（一樓）'),
-      P('Yamazato','Yamazato, Hotel Okura Amsterdam','日式懷石／壽司，米其林一星（一樓）'),
-      P('Ciel Bleu','Ciel Bleu, Hotel Okura Amsterdam','法式 fine dining，米其林二星（23 樓景觀）'),
+      P('Sazanka','Teppanyaki Sazanka, Hotel Okura Amsterdam','鐵板燒，米其林一星（一樓）',G('YYzgPUEVia3R5Ebg7')),
+      P('Yamazato','Yamazato, Hotel Okura Amsterdam','日式懷石／壽司，米其林一星（一樓）',G('YYzgPUEVia3R5Ebg7')),
+      P('Ciel Bleu','Ciel Bleu, Hotel Okura Amsterdam','法式 fine dining，米其林二星（23 樓景觀）',G('zGBBcGmc8GEPXtN89')),
       P('Serre','Serre restaurant, Hotel Okura Amsterdam','全日餐廳，Bib Gourmand 平價推薦'),
     ]},
     {t:'順遊景點 · Claude 建議', tip:true, items:[
-      P('海尼根體驗館 Heineken Experience','Heineken Experience, Amsterdam','啤酒互動體驗，De Pijp，步行約 10 分'),
-      P('Sarphatipark','Sarphatipark, Amsterdam','在地人散步綠地，步行約 5 分'),
-      P('博物館廣場 Museumplein','Museumplein, Amsterdam','國家／梵谷／Moco 美術館聚集，步行約 15 分'),
-      P('瘦橋 Magere Brug','Magere Brug, Amsterdam','Amstel 河上經典木吊橋，傍晚會亮燈'),
-    ]},
-    {tx:'沒有固定店名的口袋名單', list:[
-      '台灣小吃（滷肉飯／刈包）','阿根廷餐廳豬肋排','巧克力餅乾（隊伍不長就買，好吃）',
-      'Gelato 義式冰淇淋','味道很正的日式拉麵','被印尼同學認證的泰式船麵','鬆餅早午餐',
+      P('博物館廣場 Museumplein','Museumplein, Amsterdam','國家／梵谷／市立／Moco 美術館聚集，步行約 15 分'),
+      P('Moco Museum','Moco Museum, Amsterdam','現代藝術，Banksy、草間彌生（Museumplein 旁）'),
+      P('市立現代美術館 Stedelijk','Stedelijk Museum, Amsterdam','現代藝術與設計，文藝路線必看'),
+      P('瘦橋 Magere Brug','Magere Brug, Amsterdam','Amstel 河上經典木橋，散步順遊好拍'),
     ]},
   ]},
   {city:'馬斯垂克', cls:'nl', note:'餐廳需從清單挑 4–5 間；別忘了 7/4 14:35 飛布達佩斯前要先吃中餐。飯店在市中心，景點皆步行可達。', cats:[
@@ -529,19 +536,26 @@ const PLACES = [
       P('Stokstraat / Kiki Niesten','Kiki Niesten, Maastricht','奢華精品購物街'),
     ]},
     {t:'餐廳', items:[
-      P('Marres Kitchen','Marres Kitchen, Maastricht','地中海菜（7/1 建議）'),
-      P('Tabkew','Tabkew, Maastricht','泰國菜，只開晚上、週三休（7/3 建議）'),
-      P('King George','King George, Maastricht','中東菜，會用較多香料'),
-      P('Prix de Rome','Prix de Rome, Maastricht','西式 fine dining'),
-      P("Harry's",'Harrys restaurant, Maastricht','西餐廳，菜系較混搭'),
+      P('Marres Kitchen','Marres Kitchen, Maastricht','地中海菜（7/1 建議）',G('BQ2ZrdiS3bk9AZ2j6')),
+      P('Tabkew','Tabkew, Maastricht','泰國菜，只開晚上、週三休（7/3 建議）',G('gKRCyn8mYJ9JzinZA')),
+      P('King George','King George, Maastricht','中東菜，會用較多香料',G('eHmziK8fpGwguyys9')),
+      P('Prix de Rome','Prix de Rome, Maastricht','西式 fine dining · <a href="https://www.prix-de-rome.nl/" target="_blank" rel="noopener">官網</a>'),
+      P("Harry's",'Harrys restaurant, Maastricht','西餐廳，菜系較混搭',G('6nxfLCgNdR6qUDSv8')),
+      P('BBQ 豬肋排＆漢堡','BBQ ribs burger, Maastricht','7/2 已訂位，肉看起來很專業',G('nrtL7GaPn2viyDuM6')),
+      P('亞洲麵店（台灣牛肉麵）','Asian noodles Taiwanese beef noodle, Maastricht','有台灣牛肉麵',G('w9VHVr7caoiMFsjy6')),
+      P('中國菜','Chinese restaurant, Maastricht','',G('u7AnwnRrvsRFdVqt6')),
+      P('比利時餐廳','Belgian restaurant, Maastricht','7/3 中餐選項',G('aQ42GQJPWvBBFnSZ6')),
+      P('日式拉麵','ramen, Maastricht','外送',G('uzMxcoJbCMPTcWaT8')),
+      P('越南菜','Vietnamese restaurant, Maastricht','',G('XTGDBqhsDgEi2m8NA')),
     ]},
     {t:'順遊景點 · Claude 建議', tip:true, items:[
       P('聖母聖殿 Onze-Lieve-Vrouwebasiliek','Onze-Lieve-Vrouwebasiliek, Maastricht','點蠟燭祈願的星光小聖堂'),
       P('紅塔 Sint-Janskerk','Sint-Janskerk, Maastricht','可登塔俯瞰全城，在聖色法斯旁'),
+      P('Bonnefanten 現代美術館','Bonnefantenmuseum, Maastricht','現代藝術＋火箭塔造型建築，過河近 Wyck'),
       P('地獄之門 Helpoort','Helpoort, Maastricht','荷蘭最古老城門，耶克爾河畔'),
-      P('Wyck 區','Wyck, Maastricht','過聖色法斯橋對岸，咖啡小店街區'),
+      P('Wyck 區','Wyck, Maastricht','過聖色法斯橋對岸，咖啡與文創小店街區'),
     ]},
-    {tx:'口袋名單', list:['BBQ 豬肋排＆漢堡（7/2 已訂位，肉看起來很專業）','比利時餐廳（7/3 中餐）','亞洲麵店（有台灣牛肉麵）','中國菜','越南菜','日式拉麵（外送）','林堡果餡餅 vlaai（水磨坊麵包店）']},
+    {tx:'其他', list:['林堡果餡餅 vlaai（耶克爾河畔最古老水磨坊麵包店）']},
   ]},
   {city:'布達佩斯', cls:'hu', note:'餐廳需從清單挑 5 間；最後一天 14:30 班機（去機場前留意用餐時間）。飯店 Al Habtoor 在 Erzsébet tér 市中心，以下順遊景點多為步行可達。', cats:[
     {t:'市集', items:[
@@ -553,7 +567,7 @@ const PLACES = [
       P('英雄廣場 Heroes’ Square','Heroes Square, Budapest','千年紀念碑'),
       P('安德拉什大街 Andrássy','Andrassy Avenue, Budapest','世界遺產大道'),
       P('音樂之家 House of Music','House of Music Hungary, Budapest','藤本壯介作品'),
-      P('聖安德烈 Szentendre','Szentendre, Hungary','地中海風藝術小鎮'),
+      P('聖安德烈 Szentendre','Szentendre, Hungary','地中海風藝術小鎮 · <a href="https://monkeywalker.com/szentendre/" target="_blank" rel="noopener">一日遊參考</a>'),
     ]},
     {t:'商店', items:[
       P('Bomo Art','Bomo Art, Budapest','手工文具，飯店走 6 分（400m）· <a href="https://www.bomoart.hu/en" target="_blank" rel="noopener">官網</a>'),
@@ -563,19 +577,26 @@ const PLACES = [
       P('Falk Miksa utca','Falk Miksa utca, Budapest','古董店街區，飯店開車 10 分'),
     ]},
     {t:'餐廳', items:[
-      P('New York Café','New York Cafe, Budapest','世界最美咖啡館之一'),
-      P('Stand Restaurant','Stand Restaurant, Budapest','米其林 2 星'),
-      P('Spicy Fish','Spicy Fish, Budapest','川菜，有酸辣魚'),
+      P('傳統匈牙利餐廳（Rézkakas）','Rezkakas Bistro, Budapest','現場吉普賽音樂，彼得朋友推薦 · <a href="https://rezkakasbistro.hu/en/rezkakas-finebistro-fooldal-english/" target="_blank" rel="noopener">官網</a>',G('GtmfD8J6Npq7CQVs9')),
+      P('Stand Restaurant','Stand Restaurant, Budapest','米其林 2 星',G('bxVZ8WLh9hmmo8Yo6')),
+      P('New York Café','New York Cafe, Budapest','世界最美咖啡館之一',G('yhyQL55tAgEqDQHC9')),
+      P('匈牙利菜','Hungarian restaurant, Budapest','',G('VsYuC9UDhDx7Gfou7')),
+      P('Spicy Fish','Spicy Fish, Budapest','川菜，有酸辣魚',G('mdriZyJiqACGxVMQ9')),
+      P('中式餐廳','Chinese restaurant, Budapest','',G('2qXdBqJe2Gm1SG7n9')),
+      P('中式家常菜','Chinese home style restaurant, Budapest','',G('ebqG5Eoos6pi5ptm9')),
+      P('泰國菜','Thai restaurant, Budapest','',G('ieQog4nYZPwEjTTL7')),
+      P('港式茶餐廳','Hong Kong cafe, Budapest','',G('HcnvAmNsJM8nHt74A')),
+      P('台灣小吃店','Taiwanese restaurant, Budapest','選擇有限',G('dNHE277n3Ju1xQXw6')),
+      P('Tapas（地中海中東）','Mediterranean tapas, Budapest','多人分食小菜',G('9mdUrFHqFwURhkhb7')),
     ]},
     {t:'順遊景點 · Claude 建議', tip:true, items:[
       P('聖伊斯特凡大教堂','St Stephens Basilica, Budapest','可登頂看景，飯店步行約 5 分'),
-      P('塞切尼鏈橋 Chain Bridge','Szechenyi Chain Bridge, Budapest','多瑙河經典地標，步行約 8 分'),
+      P('匈牙利國家博物館','Hungarian National Museum, Budapest','文物與歷史，文藝路線（週一休）'),
+      P('Központi Antikvárium 古書店','Kozponti Antikvarium, Budapest','全國最大古書／古地圖店，1891 年至今（週日休）'),
       P('Vörösmarty 廣場 / Váci 街','Vorosmarty ter, Budapest','購物與咖啡聚集，步行約 5 分'),
-      P('Gozsdu Udvar 中庭','Gozsdu Udvar, Budapest','餐酒小店聚集的熱鬧中庭，步行約 6 分'),
       P('多哈尼街猶太教堂','Dohany Street Synagogue, Budapest','歐洲最大猶太教堂，步行約 10 分'),
-      P('布達佩斯之眼 摩天輪','Budapest Eye, Budapest','就在飯店旁的 Erzsébet tér 廣場上'),
+      P('塞切尼鏈橋 Chain Bridge','Szechenyi Chain Bridge, Budapest','多瑙河經典地標，散步順遊'),
     ]},
-    {tx:'口袋名單', list:['傳統匈牙利餐廳（吉普賽音樂，彼得朋友推薦）','匈牙利菜','泰國菜','中式餐廳／中式家常菜','港式茶餐廳','台灣小吃店（選擇有限）','Tapas 中東地中海小菜（多人分食）']},
   ]},
 ];
 
@@ -609,10 +630,14 @@ function navTo(q){
     : 'https://www.google.com/maps/search/?api=1&query=' + enc;
   window.open(url, '_blank');
 }
+function navDirect(url){ window.open(url, '_blank'); }
+// 有精準連結就直接開，否則用名稱搜尋（沿用 Google/Apple 切換）
+function navPlace(p){ if(p.url) navDirect(p.url); else navTo(p.q); }
+function navAttr(p){ return p.url ? `navDirect('${p.url}')` : `navTo('${p.q.replace(/'/g,"\\'")}')`; }
 
 /* ============ RENDER ============ */
 function navBtn(p, cls){
-  return `<button class="nav-btn ${cls}" onclick="navTo('${p.q.replace(/'/g,"\\'")}')">${NAVSVG}導航</button>`;
+  return `<button class="nav-btn ${cls}" onclick="${navAttr(p)}">${NAVSVG}導航</button>`;
 }
 function renderItem(it, cls){
   const timeMatch = it.t.match(/^(\d{1,2}:\d{2})/);
@@ -698,7 +723,7 @@ function renderPlaces(){
       const rows = cat.items.map(p=>`
         <div class="place">
           <div class="pinfo"><div class="pname">${p.name}</div>${p.note?`<div class="pnote">${p.note}</div>`:''}</div>
-          <button class="icon-btn ${city.cls}" onclick="navTo('${p.q.replace(/'/g,"\\'")}')">${NAVSVG}</button>
+          <button class="icon-btn ${city.cls}" onclick="${navAttr(p)}">${NAVSVG}</button>
         </div>`).join('');
       const tipChip = cat.tip ? ` <span class="chip gold" style="font-size:10px">建議</span>` : '';
       return `<div class="card"><div class="cat-title">${cat.t}${tipChip}</div>${rows}</div>`;
