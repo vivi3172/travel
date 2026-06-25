@@ -445,7 +445,8 @@ const HOTELS = [
 const P = (name, q, note, url) => ({name, q, note, url});
 const G = code => 'https://maps.app.goo.gl/' + code;
 
-const DAYS = [
+const TRIP_YEAR = 2026;
+let DAYS = [
   {n:1, date:'06/27', mo:'六月', wd:'星期六', c:'nl', theme:'抵達 · 採買 · 散步',
    blocks:[
      {l:'早上', items:[{t:'一婷 10:15 抵達'}]},
@@ -907,6 +908,59 @@ function importCustom(){
 // 初始化資料來源
 if(SHARED){ loadSharedCache(); } else { loadLocal(); }
 
+/* ============ 行程：可從 Google 試算表 schedule 工作表讀取 ============ */
+const SCHEDULE_CACHE_KEY = 'nl-hu-schedule-cache-v1';
+const WD = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+function normDate(s){
+  const m = String(s).trim().match(/(\d{1,2})\D+(\d{1,2})/);
+  if(!m) return String(s).trim();
+  return ('0'+m[1]).slice(-2) + '/' + ('0'+m[2]).slice(-2);
+}
+function buildDaysFromRows(rows){
+  const byDay = {};
+  rows.forEach(r=>{
+    const dn = parseInt(r.day,10); if(!dn) return;
+    if(!byDay[dn]) byDay[dn] = {n:dn, date:'', region:'nl', theme:'', blocks:{}, order:[]};
+    const d = byDay[dn];
+    if(r.date && !d.date) d.date = normDate(r.date);
+    if(r.region) d.region = String(r.region).trim().toLowerCase();
+    if(r.theme && !d.theme) d.theme = String(r.theme).trim();
+    const bl = (String(r.block||'').trim()) || '行程';
+    if(!d.blocks[bl]){ d.blocks[bl] = []; d.order.push(bl); }
+    if(String(r.text||'').trim()){
+      const it = {t: String(r.text).trim()};
+      if(String(r.place||'').trim()){ it.p = {name:String(r.place).trim(), q:String(r.place).trim(), url:String(r.url||'').trim()}; }
+      d.blocks[bl].push(it);
+    }
+  });
+  return Object.values(byDay).sort((a,b)=>a.n-b.n).map(d=>{
+    const dt = d.date || '01/01';
+    const mm = parseInt(dt.split('/')[0],10), dd = parseInt(dt.split('/')[1],10);
+    const wd = WD[new Date(TRIP_YEAR, mm-1, dd).getDay()];
+    return {
+      n:d.n, date:dt, mo: mm+'月', wd,
+      c: (d.region==='hu' ? 'hu' : 'nl'), theme: d.theme,
+      blocks: d.order.map(l=>({l, items:d.blocks[l]}))
+    };
+  });
+}
+async function fetchSchedule(){
+  if(!SHARED) return;
+  try{
+    const res = await fetch(SHEET_API_URL + '?type=schedule', {cache:'no-store'});
+    const rows = await res.json();
+    if(Array.isArray(rows) && rows.length){
+      try{ localStorage.setItem(SCHEDULE_CACHE_KEY, JSON.stringify(rows)); }catch(e){}
+      DAYS = buildDaysFromRows(rows);
+      renderDays(); renderToday();
+    }
+  }catch(e){ /* 失敗則保留目前（快取或內建）行程 */ }
+}
+// 載入時先用快取的試算表行程（離線/即時顯示），再背景更新
+if(SHARED){
+  try{ const r = localStorage.getItem(SCHEDULE_CACHE_KEY); if(r){ const rows = JSON.parse(r); if(Array.isArray(rows)&&rows.length) DAYS = buildDaysFromRows(rows); } }catch(e){}
+}
+
 /* ============ RENDER PLACES ============ */
 function renderPlaces(){
   document.getElementById('placesHost').innerHTML = PLACES.map(city=>{
@@ -1002,7 +1056,7 @@ function go(s){
 renderDays(); renderToday(); renderPlaces(); renderHotels();
 renderPhrases(DUTCH,'dutchHost'); renderPhrases(HUN,'hunHost');
 convEUR('eur'); convHUF('huf');
-setSync(); if(SHARED) fetchShared();
+setSync(); if(SHARED){ fetchShared(); fetchSchedule(); }
 
 /* ============ OFFLINE (service worker) ============ */
 if('serviceWorker' in navigator){
